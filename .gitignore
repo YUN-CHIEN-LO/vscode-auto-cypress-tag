@@ -5,7 +5,6 @@ node_modules/
 # Compiled output
 /out/
 /dist/
-/*.js
 /*.map
 /*.tsbuildinfo
 
