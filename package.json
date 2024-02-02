@@ -10,7 +10,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand::vscode-auto-cypress-tag.addCypressTag"
+    "onCommand:vscode-auto-cypress-tag.addCypressTag"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -37,6 +37,11 @@
     "test": "vscode-test",
     "extension": "code --install-extension vscode-auto-cypress-tag-0.0.1.vsix",
     "build": "npm run package && vsce package && npm run extension"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "commander": "^11.1.0",
+    "vue-template-compiler": "^2.7.16"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.6",
