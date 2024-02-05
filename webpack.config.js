@@ -48,7 +48,12 @@ const extensionConfig = {
   plugins: [
     // ... other plugins
     new CopyWebpackPlugin({
-      patterns: [{ from: "README.md", to: "" }],
+      patterns: [
+        {
+          from: path.resolve(__dirname, "README.md"),
+          to: path.resolve(__dirname, "dist"),
+        },
+      ],
     }),
   ],
 };

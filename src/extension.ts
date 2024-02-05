@@ -1,98 +1,93 @@
 import * as vscode from "vscode";
+import VueStringProcessor from "./processor";
 
+/**
+ * 判斷是否為 vue 檔
+ * @param {vscode.TextDocument} document - 編輯器文件
+ * @returns {boolean} - 是否為 vue 檔
+ */
 function isVueFile(document: vscode.TextDocument): boolean {
   return document.languageId === "vue";
 }
 
-function generateUUID(): string {
-  return "xxxxxxxx".replace(/[xy]/g, function (c) {
-    const r = (Math.random() * 16) | 0;
-    const v = c === "x" ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-}
-
+/**
+ * 為 vue 檔中的所有 html 標籤加上 'data-cy' 標籤
+ *
+ * @param {vscode.TextEditor} editor - 當前開啟的編輯器
+ */
 function addDataCyAttribute(editor: vscode.TextEditor): void {
+  // 當前編輯的文件
   const document = editor.document;
+  // 工作區編輯實例
   const edit = new vscode.WorkspaceEdit();
 
-  for (let i = 0; i < document.lineCount; i++) {
-    const line = document.lineAt(i);
-    const regex = /<([a-zA-Z0-9-]+)(?=\s|>)([^>]*)>/g;
+  // 取得編輯文件範圍
+  const entireRange = new vscode.Range(
+    editor.document.positionAt(0),
+    editor.document.positionAt(document.getText().length)
+  );
 
-    let match;
-    while ((match = regex.exec(line.text)) !== null) {
-      const tagName = match[1];
-      const attributes = match[2];
-
-      // Check if the tag is in the list to be avoided
-      const tagNamesToAvoid = [
-        "TEMPLATE",
-        "SCRIPT",
-        "STYLE",
-        "TRANSITION",
-        "TRANSITION-GROUP",
-        "KEEPALIVE",
-        "TELEPORT",
-        "SUSPENSE",
-      ];
-      if (tagNamesToAvoid.includes(tagName.toUpperCase())) {
-        // Skip adding 'data-cy' attribute for this tag
-        console.log(`Skipping tag: ${tagName}`);
-        continue;
-      }
-
-      // Check if the tag already has a 'data-cy' attribute
-      if (!/\bdata-cy\b/.test(attributes)) {
-        // Add 'data-cy' attribute inside the tag
-        const startPosition = new vscode.Position(
-          i,
-          match.index + match[0].length - 1
-        );
-        const endPosition = new vscode.Position(
-          i,
-          match.index + match[0].length - 1
-        );
-        const range = new vscode.Range(startPosition, endPosition);
-        const text = ` data-cy="${tagName}-${generateUUID()}"`;
-
-        edit.insert(document.uri, range.end, text);
-      }
-    }
-  }
-
+  // 取得編輯文件字串
+  const entireContent = document.getText();
+  // 取得插入 data-cy 標籤後的字串
+  const newText = VueStringProcessor(entireContent);
+  // 替換文件內容
+  edit.replace(document.uri, entireRange, newText);
+  // 更新文件
   vscode.workspace.applyEdit(edit);
 }
 
+/**
+ * 啟用插件
+ * @param {vscode.ExtensionContext} context - 啟用插件背景數據
+ */
 export function activate(context: vscode.ExtensionContext) {
+  // 插入按鈕
   const addTagButton = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Left
   );
+  // 按鈕標題
   addTagButton.text = "$(tag) Add data-cy Attribute";
+  // 按鈕觸發指令
   addTagButton.command = "vscode-auto-cypress-tag.addCypressTag";
+  // 按鈕加入工劇烈
   context.subscriptions.push(addTagButton);
 
+  // 註冊指令
   const addDataCyAttributeCommand = vscode.commands.registerCommand(
     "vscode-auto-cypress-tag.addCypressTag",
     () => {
       const editor = vscode.window.activeTextEditor;
 
-      if (editor) {
-        const document = editor.document;
-
-        if (isVueFile(document)) {
-          addDataCyAttribute(editor);
-        } else {
-          vscode.window.showErrorMessage(
-            "This command can only be applied to Vue files."
-          );
-        }
+      // 找不到編輯器，拋出錯誤並返回
+      if (!editor) {
+        vscode.window.showErrorMessage("Editor not found.");
+        return;
       }
+
+      // 編輯文件
+      const document = editor.document;
+
+      // 文件不是 .vue 檔，拋出錯誤並返回
+      if (!isVueFile(document)) {
+        vscode.window.showErrorMessage(
+          "The Cypress Tag plugin only applies to .vue files."
+        );
+        return;
+      }
+
+      // 新增 data-cy 標籤
+      addDataCyAttribute(editor);
     }
   );
 
+  // 訂閱指令
   context.subscriptions.push(addDataCyAttributeCommand);
+  // 顯示按鈕
   addTagButton.show();
 }
 
+/**
+ * 停用插件
+ */
 export function deactivate() {}

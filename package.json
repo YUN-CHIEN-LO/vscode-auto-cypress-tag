@@ -2,15 +2,16 @@
   "name": "vscode-auto-cypress-tag",
   "displayName": "vscode-auto-cypress-tag",
   "description": "A simple VScode extension to add data-cy tag to your .vue file.",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "publisher": "Chien Lo",
   "engines": {
     "vscode": "^1.86.0"
   },
   "categories": [
-    "Other"
+    "Snippets"
   ],
   "activationEvents": [
-    "onCommand:vscode-auto-cypress-tag.addCypressTag"
+    "onLanguage:vue"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -21,36 +22,38 @@
       }
     ]
   },
+  "icon": "assets/lyc-logo.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/YUN-CHIEN-LO/vscode-auto-cypress-tag.git"
   },
   "scripts": {
-    "vscode:prepublish": "npm run package",
     "compile": "webpack",
     "watch": "webpack --watch",
-    "package": "webpack --mode production --devtool hidden-source-map",
+    "package": "webpack --mode production --devtool hidden-source-map && vsce package --out vscode-auto-cypress-tag.vsix",
     "compile-tests": "tsc -p . --outDir out",
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "vscode-test",
-    "extension": "code --install-extension vscode-auto-cypress-tag-0.0.1.vsix",
-    "build": "npm run package && vsce package && npm run extension"
+    "extension": " code --install-extension ./vscode-auto-cypress-tag.vsix",
+    "build": "npm run package && npm run extension"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",
-    "commander": "^11.1.0",
+    "crypto": "^1.0.1",
     "vue-template-compiler": "^2.7.16"
   },
   "devDependencies": {
+    "@types/cheerio": "^0.22.35",
     "@types/mocha": "^10.0.6",
-    "@types/node": "18.x",
+    "@types/node": "^20.11.16",
     "@types/vscode": "^1.86.0",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@typescript-eslint/parser": "^6.19.1",
     "@vscode/test-cli": "^0.0.4",
     "@vscode/test-electron": "^2.3.9",
+    "commander": "^12.0.0",
     "copy-webpack-plugin": "^12.0.2",
     "eslint": "^8.56.0",
     "ts-loader": "^9.5.1",

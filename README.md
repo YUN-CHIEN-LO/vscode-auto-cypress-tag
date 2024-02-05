@@ -1,37 +1,60 @@
-# vscode-auto-cypress-tag
+# VSCode Auto Cypress Tag
 
 ## Overview
 
-VSCode Auto Cypress Tag is a simple extension for Visual Studio Code that helps you add `data-cy` attributes to HTML tags in your Vue files. It automates the process of generating unique identifiers for Cypress testing.
+VSCode Auto Cypress Tag is a simple extension for Visual Studio Code that adds data-cy attributes to HTML tags in Vue files. It automatically generates unique identifiers for Cypress testing.
 
 ## Features
 
-- Adds `data-cy` attributes to HTML tags in Vue files.
-- Generates unique identifiers using UUIDs.
-- Avoids specified tags (e.g., TEMPLATE, SCRIPT) based on user preferences.
+- Adds data-cy attributes to HTML tags in Vue files.
+- Generates unique identifiers using UUID.
 
 ## Installation
 
 1. Open Visual Studio Code.
-2. Go to the Extensions view by clicking on the Extensions icon in the Activity Bar on the side of the window or use the keyboard shortcut `Ctrl + Shift + X`.
-3. Search for "VSCode Auto Cypress Tag".
-4. Click the "Install" button.
+2. Access extensions either by clicking on the Extensions tab in the Activity Bar on the side or using the shortcut `Ctrl + Shift + X`.
+3. Click on the `...` button, then choose `Install from VSIX` and select the specified `.vsix` file.
+4. Once the file is uploaded, the installation is complete.
 
 ## Usage
 
 1. Open a Vue file in Visual Studio Code.
 2. Click on the "Add Cypress Tag" button in the status bar.
-3. The extension will add `data-cy` attributes to relevant HTML tags in the file.
+3. The extension will add data-cy attributes to relevant HTML tags in the file.
 
-## Configuration
+## Maintenance Guidelines
 
-You can configure the extension by modifying the settings in your `settings.json` file.
+1. Clone the project and run npm ci to install dependencies.
+2. To execute the packaging process, globally install `npm i -g vsce && npm install -g webpack && install -g typescript `
+3. Compile, pack, and install the project: `npm run build`
+4. Project scaffolding:https://code.visualstudio.com/api/get-started/your-first-extension
 
-- `"autoCypressTag.tagsToAvoid"`: Specify tags to avoid adding `data-cy` attributes.
+## 資料夾結構
 
-## Contribution
+```plain
+VueCypressTagGenerator/
+    ├─  .vscode/ ------------------------- vscode configuration
+    ├─  assets/ -------------------------- static resources
+    ├─  dist/ ---------------------------- packaged compilation results
+    ├─  node_modules/ -------------------- npm packages
+    ├─  src/ ----------------------------- functionality logic and implementation
+    ├─  .eslintrc.json ------------------- eslint configuration
+    ├─  .gitignore ----------------------- git ignore configuration
+    ├─  CHANGELOG.md --------------------- version history
+    ├─  LICENSE.md ----------------------- license file
+    ├─  package-lock.json ---------------- npm package version lock
+    ├─  package.json --------------------- npm package configuration
+    ├─  README.md ------------------------ plugin documentation
+    ├─  tsconfig.json -------------------- typescript configuration
+    ├─  vscode-auto-cypress-tag.vsix ----- package installation file
+    └─  webpack.config.js ---------------- webpack configuration
+```
 
-Feel free to contribute to this project by reporting issues or submitting pull requests on [GitHub](https://github.com/YUN-CHIEN-LO/vscode-auto-cypress-tag.git).
+## Wishlist
+
+1. Complete unit tests.
+2. Implement automatic versioning for the package maintenance.
+3. Wishlist for expanding snippet or emmet functionality, enabling tab expansion and insertion of a randomly generated UUID after typing `data-cy` in templates.
 
 ## License
 
